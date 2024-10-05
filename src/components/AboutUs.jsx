@@ -1,0 +1,54 @@
+import React from 'react'
+import profile_pic from '../assets/profile_pic.png'
+
+function AboutUs() {
+  return (
+    <div className="py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-extrabold text-white text-center mb-8">About Us</h2>
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Team Member 1 */}
+          <div className="text-center">
+            <div className="space-y-4">
+              <img className="mx-auto h-40 w-40 rounded-full" src={profile_pic} alt="Team member 1" />
+              <div className="space-y-2">
+                <div className="text-lg leading-6 font-medium text-white">Juan Jose Alonso</div>
+                <p className="text-sm text-gray-400">
+                  John is our financial expert with over 10 years of experience in investment banking and portfolio management.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Team Member 2 */}
+          <div className="text-center">
+            <div className="space-y-4">
+              <img className="mx-auto h-40 w-40 rounded-full" src={profile_pic} alt="Team member 2" />
+              <div className="space-y-2">
+                <div className="text-lg leading-6 font-medium text-white">Juan Pablo Gelmi</div>
+                <p className="text-sm text-gray-400">
+                  Jane is our data visualization specialist, turning complex financial data into clear, actionable insights.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Team Member 3 */}
+          <div className="text-center">
+            <div className="space-y-4">
+              <img className="mx-auto h-40 w-40 rounded-full" src={profile_pic} alt="Team member 3" />
+              <div className="space-y-2">
+                <div className="text-lg leading-6 font-medium text-white">Eduardo Salinas</div>
+                <p className="text-sm text-gray-400">
+                  Mike is our software engineer, ensuring our platform is robust, scalable, and user-friendly.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default AboutUs
