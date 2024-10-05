@@ -14,9 +14,9 @@ function App() {
       <Hero />
       <div id="content">
         <Features />
-        <AboutUs />
         <StockList />
         <DataContainers />
+        <AboutUs />
       </div>
     </div>
   )
