@@ -1,6 +1,6 @@
 import React from 'react'
-import profile_pic from '../assets/profile_pic.png'
-import profile_pic_jja from '../assets/profile_pic_jja.jpeg'
+import profile_pic from '../../public/assets/profile_pic.png'
+import profile_pic_jja from '../../public/assets/profile_pic_jja.jpeg'
 
 function AboutUs() {
   return (
