@@ -1,5 +1,6 @@
 import React from 'react'
 import profile_pic from '../assets/profile_pic.png'
+import profile_pic_jja from '../assets/profile_pic_jja.jpeg'
 
 function AboutUs() {
   return (
@@ -10,11 +11,11 @@ function AboutUs() {
           {/* Team Member 1 */}
           <div className="text-center">
             <div className="space-y-4">
-              <img className="mx-auto h-40 w-40 rounded-full" src={profile_pic} alt="Team member 1" />
+              <img className="mx-auto h-40 w-40 rounded-full" src={profile_pic_jja} alt="Team member 1" />
               <div className="space-y-2">
-                <div className="text-lg leading-6 font-medium text-white">Juan Jose Alonso</div>
+                <div className="text-lg leading-6 font-medium text-white">Juan José Alonso</div>
                 <p className="text-sm text-gray-400">
-                  John is our financial expert with over 10 years of experience in investment banking and portfolio management.
+                  Juan José es alumno de cuarto año de Ingeniería (major en Ingeniería de Software, minor en Data Science & Analytics).
                 </p>
               </div>
             </div>
