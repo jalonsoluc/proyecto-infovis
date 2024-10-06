@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 function Features() {
-  const [activeFeature, setActiveFeature] = useState(1);
-
   const features = [
     {
       title: "Análisis Claros",
@@ -39,11 +37,8 @@ function Features() {
       {features.map((feature, index) => (
         <div
           key={index}
-          className={`p-6 text-white rounded-lg shadow-lg transition-all duration-300 cursor-pointer
-            ${activeFeature === index 
-              ? "bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-700 transform scale-105" 
-              : "bg-white bg-opacity-5 transform scale-95"}`}
-          onClick={() => setActiveFeature(index)}
+          className={`p-6 text-white rounded-lg shadow-lg transition-all duration-500 cursor-pointer
+            bg-white bg-opacity-5 transform scale-95 hover:bg-gradient-to-br hover:from-emerald-500 hover:via-teal-600 hover:to-cyan-700 hover:scale-105`}
         >
           <div className="flex items-center mb-4 text-white">
             {feature.icon}
@@ -56,4 +51,4 @@ function Features() {
   )
 }
 
-export default Features
+export default Features;
