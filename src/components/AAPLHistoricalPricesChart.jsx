@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import jsonData from '../data/AAPL.json'; // Importar el JSON localmente
 
-// Registrar los componentes de Chart.js que vamos a usar
+// Registrar los componentes de Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const AAPLHistoricalPricesChart = () => {
@@ -11,29 +20,15 @@ const AAPLHistoricalPricesChart = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Función para verificar si los datos están almacenados localmente
-        const checkLocalStorage = () => {
-            const storedData = localStorage.getItem('AAPLStockData');
-            if (storedData) {
-                // Si los datos están en localStorage, los usamos directamente
-                const parsedData = JSON.parse(storedData);
-                setChartData(parsedData);
-                setLoading(false);
-                return true;
-            }
-            return false;
-        };
-
-        const fetchStockData = async () => {
+        const loadChartData = () => {
             try {
-                const response = await axios.get(
-                    `https://financialmodelingprep.com/api/v3/historical-price-full/AAPL?apikey=WhbI5G7ZJNT9alrAnPc9GG78BUfkCdy2`
-                );
-                const historicalData = response.data.historical;
-                const dates = historicalData.map((item) => item.date).reverse();
-                const closingPrices = historicalData.map((item) => item.close).reverse();
+                // Extraer los datos necesarios del JSON
+                const historicalData = jsonData.historical;
+                const sortedData = historicalData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                const dates = sortedData.map((item) => item.date);
+                const closingPrices = sortedData.map((item) => item.close);
 
-                const chartData = {
+                const formattedChartData = {
                     labels: dates,
                     datasets: [
                         {
@@ -46,20 +41,15 @@ const AAPLHistoricalPricesChart = () => {
                     ],
                 };
 
-                // Guardar los datos en localStorage
-                localStorage.setItem('AAPLStockData', JSON.stringify(chartData));
-                setChartData(chartData);
+                setChartData(formattedChartData);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching stock data:', error);
+                console.error('Error loading chart data:', error);
                 setLoading(false);
             }
         };
 
-        // Verifica si los datos ya están en localStorage antes de hacer la llamada
-        if (!checkLocalStorage()) {
-            fetchStockData();
-        }
+        loadChartData();
     }, []);
 
     return (

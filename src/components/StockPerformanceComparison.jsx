@@ -1,30 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { 
+    Chart as ChartJS, 
+    CategoryScale, 
+    LinearScale, 
+    PointElement, 
+    LineElement, 
+    Title, 
+    Tooltip, 
+    Legend 
+} from 'chart.js';
+
+// Importamos los archivos JSON de los datos históricos
+import AAPLData from '../data/AAPL.json';
+import SPYData from '../data/SPY.json';
+import GOOGLData from '../data/GOOGL.json';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const tickers = ['AAPL', 'SPY', 'GOOGL']; // Puedes añadir más tickers si lo deseas
-
-const fetchStockData = async (ticker) => {
-    try {
-        const response = await axios.get(
-            `https://financialmodelingprep.com/api/v3/historical-price-full/${ticker}?apikey=WhbI5G7ZJNT9alrAnPc9GG78BUfkCdy2`
-        );
-        const historicalData = response.data.historical.map((item) => ({
-            date: item.date,
-            close: item.close,
-        })).reverse(); // Invertimos los datos para tenerlos en orden cronológico
-        return historicalData;
-    } catch (error) {
-        console.error(`Error fetching data for ${ticker}:`, error);
-        return [];
-    }
+// Asociamos los tickers a sus archivos JSON correspondientes
+const tickers = {
+    AAPL: AAPLData.historical,
+    SPY: SPYData.historical,
+    GOOGL: GOOGLData.historical,
 };
 
+// Función para normalizar el rendimiento relativo (empezando desde 100%)
 const compareStockPerformance = (data) => {
-    // Función para normalizar los datos para comparación relativa (todos comienzan en 100%)
     const firstPrice = data[0].close;
     return data.map((item) => ({
         date: item.date,
@@ -37,20 +39,25 @@ const StockPerformanceComparison = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = () => {
             const fetchedData = {};
             const labels = new Set();
 
-            for (let ticker of tickers) {
-                const data = await fetchStockData(ticker);
-                const normalizedData = compareStockPerformance(data);
+            // Iteramos sobre cada ticker para extraer y normalizar los datos
+            for (let [ticker, data] of Object.entries(tickers)) {
+                const sortedData = data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                const normalizedData = compareStockPerformance(sortedData);
                 fetchedData[ticker] = normalizedData;
 
-                normalizedData.forEach((item) => labels.add(item.date)); // Recopila las fechas
+                // Agregamos todas las fechas al conjunto de etiquetas
+                normalizedData.forEach((item) => labels.add(item.date));
             }
 
-            const sortedLabels = Array.from(labels).sort(); // Ordena las fechas
-            const datasets = tickers.map((ticker) => ({
+            // Convertimos el conjunto de etiquetas a un array ordenado
+            const sortedLabels = Array.from(labels).sort((a, b) => new Date(a) - new Date(b));
+
+            // Creamos los datasets para cada ticker
+            const datasets = Object.keys(tickers).map((ticker) => ({
                 label: ticker,
                 data: sortedLabels.map(
                     (date) => fetchedData[ticker].find((item) => item.date === date)?.performance || null
@@ -60,6 +67,7 @@ const StockPerformanceComparison = () => {
                 fill: false,
             }));
 
+            // Actualizamos el estado con los datos para el gráfico
             setChartData({
                 labels: sortedLabels,
                 datasets: datasets,
@@ -67,7 +75,7 @@ const StockPerformanceComparison = () => {
             setLoading(false);
         };
 
-        fetchData();
+        fetchData(); // Cargamos los datos desde los archivos locales
     }, []);
 
     return (
@@ -89,7 +97,7 @@ const StockPerformanceComparison = () => {
                                 scales: {
                                     y: {
                                         ticks: {
-                                            callback: (value) => value + '%',  // Añade el símbolo de porcentaje al eje Y
+                                            callback: (value) => value + '%', // Añade el símbolo de porcentaje
                                         },
                                     },
                                 },

@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { 
+    Chart as ChartJS, 
+    CategoryScale, 
+    LinearScale, 
+    BarElement, 
+    Title, 
+    Tooltip, 
+    Legend 
+} from 'chart.js';
+import jsonData from '../data/AAPL.json'; // Importar JSON localmente
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -10,26 +18,17 @@ const AAPLVolumeChart = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const checkLocalStorage = () => {
-            const storedData = localStorage.getItem('AAPLVolumeData');
-            if (storedData) {
-                const parsedData = JSON.parse(storedData);
-                setChartData(parsedData);
-                setLoading(false);
-                return true;
-            }
-            return false;
-        };
-
-        const fetchVolumeData = async () => {
+        const loadLocalData = () => {
             try {
-                const response = await axios.get(
-                    `https://financialmodelingprep.com/api/v3/historical-price-full/AAPL?apikey=WhbI5G7ZJNT9alrAnPc9GG78BUfkCdy2`
-                );
-                const historicalData = response.data.historical;
-                const dates = historicalData.map((item) => item.date).reverse();
-                const volumes = historicalData.map((item) => item.volume).reverse();
-
+                if (!jsonData.historical || jsonData.historical.length === 0) {
+                    throw new Error('Datos históricos vacíos o no disponibles');
+                }
+        
+                const historicalData = jsonData.historical;
+                const sortedData = historicalData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                const dates = sortedData.map((item) => item.date);
+                const volumes = sortedData.map((item) => item.volume);
+        
                 const chartData = {
                     labels: dates,
                     datasets: [
@@ -42,19 +41,16 @@ const AAPLVolumeChart = () => {
                         },
                     ],
                 };
-
-                localStorage.setItem('AAPLVolumeData', JSON.stringify(chartData));
+        
                 setChartData(chartData);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching volume data:', error);
+                console.error('Error al cargar los datos:', error);
                 setLoading(false);
             }
         };
 
-        if (!checkLocalStorage()) {
-            fetchVolumeData();
-        }
+        loadLocalData(); // Cargar los datos desde el JSON local
     }, []);
 
     return (
@@ -76,7 +72,8 @@ const AAPLVolumeChart = () => {
                                     y: {
                                         ticks: {
                                             beginAtZero: true,
-                                            callback: (value) => value.toLocaleString(), // Para formatear números grandes
+                                            callback: (value) =>
+                                                value.toLocaleString(), // Formatear números grandes
                                         },
                                     },
                                 },

@@ -4,6 +4,7 @@ import AAPLVolumeChart from './AAPLVolumeChart'
 import AAPLStockChartWithSMA from './AAPLStockChartWithSMA'
 import AAPLStockChartWithRSI from './AAPLStockChartWithRSI'
 import AAPLStockChartWithMACD from './AAPLStockChartWithMACD'
+import AAPLProductVsStock from './AAPLProductVsStock'
 import StockPerformanceComparison from './StockPerformanceComparison'
 
 function DataContainers() {
@@ -83,6 +84,18 @@ function DataContainers() {
                 Al normalizar los precios de cada activo en un punto inicial (como 100%), se puede visualizar cómo han evolucionado en comparación unos con otros. 
                 Esto facilita identificar qué acciones han tenido un mejor o peor rendimiento relativo, 
                 ayudando a los inversores a evaluar qué activos han sido más rentables o han tenido mejor desempeño en un marco temporal determinado.</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full">
+        <div className="w-1/2 p-4">
+            <div className="bg-white bg-opacity-10 rounded-lg p-6">
+              <h2 className="text-xl font-bold text-white mb-2">MACD (Moving Average Convergence Divergence)</h2>
+              <AAPLProductVsStock />
+              <h3 className="text-large font-semibold text-white mt-4 mb-2">¿Qué representa este gráfico?</h3>
+              <p className="text-gray-400 font-extralight text-justify">Este gráfico es un indicador técnico que muestra la <span className="font-bold">relación entre dos medias móviles exponenciales (generalmente de 12 y 26 días)</span>. 
+                El MACasdasdD ayuda a identificar cambios en la tendencia y el impulso del precio. Incluye tres elementos: la línea MACD, la línea de señal (EMA de 9 días del MACD), y el histograma, que muestra la diferencia entre ambas. 
+                Cruces entre el MACD y la línea de señal, así como el comportamiento del histograma, pueden señalar oportunidades de compra o venta.</p>
             </div>
           </div>
         </div>

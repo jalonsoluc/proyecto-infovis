@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import jsonData from '../data/AAPL.json'; // Importar JSON localmente
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -27,27 +36,14 @@ const AAPLStockChartWithSMA = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const checkLocalStorage = () => {
-            const storedData = localStorage.getItem('AAPLStockSMAData');
-            if (storedData) {
-                const parsedData = JSON.parse(storedData);
-                setChartData(parsedData);
-                setLoading(false);
-                return true;
-            }
-            return false;
-        };
-
-        const fetchStockData = async () => {
+        const loadLocalData = () => {
             try {
-                const response = await axios.get(
-                    `https://financialmodelingprep.com/api/v3/historical-price-full/AAPL?apikey=WhbI5G7ZJNT9alrAnPc9GG78BUfkCdy2`
-                );
-                const historicalData = response.data.historical;
-                const dates = historicalData.map((item) => item.date).reverse();
-                const closingPrices = historicalData.map((item) => item.close).reverse();
+                const historicalData = jsonData.historical;
+                const sortedData = historicalData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                const dates = sortedData.map((item) => item.date);
+                const closingPrices = sortedData.map((item) => item.close);
 
-                // Calcular la Media Móvil Simple (SMA) de 20 días
+                // Calcular la SMA de 20 días
                 const sma = calculateSMA(closingPrices, 20);
 
                 const chartData = {
@@ -66,24 +62,20 @@ const AAPLStockChartWithSMA = () => {
                             borderColor: 'rgba(255, 99, 132, 1)',
                             borderWidth: 2,
                             fill: false,
-                            borderDash: [5, 5],  // Línea discontinua para la SMA
+                            borderDash: [5, 5], // Línea discontinua para la SMA
                         },
                     ],
                 };
 
-                // Guardar los datos en localStorage
-                localStorage.setItem('AAPLStockSMAData', JSON.stringify(chartData));
                 setChartData(chartData);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching stock data:', error);
+                console.error('Error al cargar los datos:', error);
                 setLoading(false);
             }
         };
 
-        if (!checkLocalStorage()) {
-            fetchStockData();
-        }
+        loadLocalData(); // Cargar datos desde el JSON local
     }, []);
 
     return (
@@ -105,7 +97,7 @@ const AAPLStockChartWithSMA = () => {
                                 scales: {
                                     y: {
                                         ticks: {
-                                            callback: (value) => '$' + value,
+                                            callback: (value) => `$${value.toFixed(2)}`,
                                         },
                                     },
                                 },
