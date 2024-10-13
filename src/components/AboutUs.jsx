@@ -1,6 +1,7 @@
 import React from 'react'
 import profile_pic from '../../public/assets/profile_pic.png'
 import profile_pic_jja from '../../public/assets/profile_pic_jja.jpeg'
+import profile_pic_jpg from '../../public/assets/profile_pic_jpg.png'
 
 function AboutUs() {
   return (
@@ -24,11 +25,11 @@ function AboutUs() {
           {/* Team Member 2 */}
           <div className="text-center">
             <div className="space-y-4">
-              <img className="mx-auto h-40 w-40 rounded-full" src={profile_pic} alt="Team member 2" />
+              <img className="mx-auto h-40 w-40 rounded-full" src={profile_pic_jpg} alt="Team member 2" />
               <div className="space-y-2">
                 <div className="text-lg leading-6 font-medium text-white">Juan Pablo Gelmi</div>
                 <p className="text-sm text-gray-400">
-                  Jane is our data visualization specialist, turning complex financial data into clear, actionable insights.
+                  Juan Pablo es estudiante de cuarto año de Ingeniería (major en Ingeniería de Software, minor en Data Science & Analytics).
                 </p>
               </div>
             </div>
